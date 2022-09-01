@@ -9,6 +9,8 @@ const sortApi = (data, sort_type) => {
 
     let return_data = [];
 
+    let color_data = [];
+
     //console.log(data);
 
     $.ajax({
@@ -22,16 +24,19 @@ const sortApi = (data, sort_type) => {
         contentType: "application/json",
     }).done(function(data) {
 
-        data["message"].forEach(element => {
+        data["message"]["data"].forEach(element => {
             return_data.push(element);
-
         });
+
+        data["message"]["color"].forEach(element => {
+            color_data.push(element);
+        })
 
     }).fail(function(error) {
         alert(error.errors);
     });
 
-    return return_data;
+    return { return_data, color_data };
 
 }
 
