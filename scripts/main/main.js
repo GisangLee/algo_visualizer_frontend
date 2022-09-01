@@ -28,7 +28,7 @@ const generateRandomNumbers = (labels, emptyList) => {
         labels: labels,
         datasets: [{
             label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
+            backgroundColor: ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D', '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399', '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933', '#FF4D4D'],
             borderColor: 'rgb(255, 99, 132)',
             data: arr,
         }]
@@ -77,6 +77,47 @@ const getInputData = () =>{
     return size_of_data;
 }
 
+function bubble_sort(chart, initial_data, sorted_data) {
+    let labels = initial_data.labels;
+    let data = initial_data.datasets[0].data;
+    let colors = initial_data.datasets[0].backgroundColor;
+    let swapped;
+    let timeout = 0;
+
+    for (let i = 0; i < sorted_data.length; i++) {
+        data = sorted_data[i];
+        chart.update();
+    }
+
+    // do {
+    //     swapped = false;
+    //     for (let i = 0; i < 2; i++) {
+
+    //         data = sorted_data[i];
+    //         chart.update();
+    //         swapped = true;
+    //         // swap(labels, "");
+    //         // swap(data, sorted_data[i]);
+    //         // swap(colors, i);
+    //         // timeout += 50;
+    //         // this.updateChartDelayed(labels.slice(0), data, colors.slice(0), timeout, chart);
+    //         // swapped = true;
+    //     }
+    //   } while (swapped);
+}
+
+function swap(arr, i) {
+    arr = i;
+}
+  
+function updateChartDelayed(labels, data, colors, timeout, chart) {
+    setTimeout(() => {
+        data.labels = labels;
+        data.datasets[0].data = data;
+        data.datasets[0].backgroundColor = colors;
+        chart.update();
+}, timeout);
+}
 
 $(function(){
 
@@ -93,7 +134,7 @@ $(function(){
         data = next_data;
     });
 
-    $("#sort_btn").unbind("click").bind("click", function(){
+    $("#sort_btn").unbind("click").bind("click", function (){
 
         const req_data = data.datasets[0].data;
 
@@ -104,6 +145,10 @@ $(function(){
         if (res === false) {
             $("#sort_type_error_modal").modal("show");
         }
+
+        console.log(`res : ${res}`);
+
+        //setTimeout(() => bubble_sort(chart, data, res), 1000);
     });
 
   });
