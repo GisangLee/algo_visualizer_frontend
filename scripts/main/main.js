@@ -153,10 +153,12 @@ $(function(){
 
     $("#sort_btn").unbind("click").bind("click", function(){
 
+        $("#ajax_loading_modal").modal("show");
         const req_data = data.datasets[0].data;
 
         const algo_type = document.getElementById("algo_type").value;
 
+        
         const { return_data:res, color_data } = sortApi(req_data, algo_type);
 
         if (res === false) {

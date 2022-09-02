@@ -23,6 +23,7 @@ const sortApi = (data, sort_type) => {
         // data: data,
         contentType: "application/json",
     }).done(function(data) {
+        $("#ajax_loading_modal").modal("hide");
 
         console.log("response : ", data);
 
@@ -33,6 +34,8 @@ const sortApi = (data, sort_type) => {
         data["message"]["color"].forEach(element => {
             color_data.push(element);
         })
+
+        
 
     }).fail(function(error) {
         alert(error.errors);
