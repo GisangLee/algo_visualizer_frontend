@@ -99,13 +99,14 @@ function display_sorted_data_to_chart(chart, initial_data, sorted_data, sorted_c
         //console.log(initial_data.datasets[0].data.legnth / i);
 
         swap(colors, i);
-        timeout += 10;
+        timeout += 50;
+        //console.log(`color : ${sorted_color_data[i]}`);
         //this.updateChartDelayed(chart, data, sorted_data[i], timeout, sorted_color_data[i]);
         this.updateChartDelayed(chart, data, sorted_data[i], timeout, colors);
     }
 };
 
-function swap(arr, i) {
+function swap(arr, i){
     let tmp = arr[i];
     arr[i] = arr[i + 1];
     arr[i + 1] = tmp;
@@ -163,6 +164,7 @@ $(function(){
         }
 
         console.log(`res : ${res}`);
+        console.log(`colors : ${color_data}`);
         
         setTimeout(() => display_sorted_data_to_chart(chart, data, res, color_data), 1000);
     });

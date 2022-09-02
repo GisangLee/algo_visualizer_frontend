@@ -24,6 +24,8 @@ const sortApi = (data, sort_type) => {
         contentType: "application/json",
     }).done(function(data) {
 
+        console.log("response : ", data);
+
         data["message"]["data"].forEach(element => {
             return_data.push(element);
         });
