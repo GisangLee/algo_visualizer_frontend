@@ -15,7 +15,7 @@ const generateEmptyList = (size_of_data) => {
     return { emptyList, labels, colors };
 };
 
-const generateRandomNumbers = (labels, emptyList, colors) => {
+const generateRandomNumbers = (labels, emptyList, colors, search_type=null) => {
 
     let totalIndex = emptyList.length;
 
@@ -28,8 +28,13 @@ const generateRandomNumbers = (labels, emptyList, colors) => {
       }
     }
 
-    let scatter_data = [];
+    if (search_type === "binary"){
+        arr = arr.sort(function(a, b) { // 오름차순
+            return a - b;
+        });;
+    }
 
+    let scatter_data = [];
     scatter_data.push({
         "x": 0,
         "y": arr[0]
@@ -41,6 +46,9 @@ const generateRandomNumbers = (labels, emptyList, colors) => {
             "y": null   
         });
     };
+
+    console.log("scatter_data : ", scatter_data);
+
     
     const data = {
         labels: labels,
@@ -85,9 +93,10 @@ const setChart = (data) => {
     return dataChart;
 };
 
-const shuffle = (size_of_data = 20) => {    
+const shuffle = (size_of_data = 20, search_type=null) => {    
     const { labels, emptyList, colors } = generateEmptyList(size_of_data);
-    const data = generateRandomNumbers(labels, emptyList, colors);
+    const data = generateRandomNumbers(labels, emptyList, colors, search_type);
+
     const chart = setChart(data);
 
     return { chart, data };
@@ -117,27 +126,94 @@ const display_searched_data_to_chart = (chart, data, searched_idx_list) => {
     
     for (let i = 0; i < searched_idx_list.length; i++) {
         console.log(data.datasets[1].data[i]["y"]);
-        //console.log(initial_data.datasets[0].data.legnth / i);
+
         const next_pointer = {
             "x": i + 1,
-            //"y": searched_idx_list[i]
             "y": data.datasets[0].data[i]
         };
 
         timeout += 50;
-        //console.log(`color : ${sorted_color_data[i]}`);
-        //this.updateChartDelayed(chart, data, sorted_data[i], timeout, sorted_color_data[i]);
+
         this.updateChartDelayed(chart, data, next_pointer, timeout, i);
     }
 };
 
-function updateChartDelayed(chart, data, next_pointer, timeout, i){
 
-    //console.log("기존 스캐터 : ", data.datasets[1].data);
+const display_binary_search_to_chart = (chart, data, binary_pointer_list) => {
+    let colors = data.datasets[0].backgroundColor;
 
+    let timeout = 0;
+
+    console.log("binary_pointer_list : ", binary_pointer_list);
+
+    const mid_points = binary_pointer_list["mid_point"]
+    const start_points = binary_pointer_list["start_point"]
+    const end_points = binary_pointer_list["end_point"]
+    
+    for (let i = 0; i < mid_points.length; i++) {
+
+        const mid_point = {
+            "x": mid_points[i],
+            "y": data.datasets[0].data[mid_points[i]]
+        };
+
+        const start_point = {
+            "x": start_points[i],
+            "y": data.datasets[0].data[start_points[i]]
+        };
+
+        const end_point = {
+            "x": end_points[i],
+            "y": data.datasets[0].data[end_points[i]]
+        };
+
+        const next_pointer = {
+            mid_point,
+            start_point,
+            end_point,
+        }
+
+        console.log("next_pointer :", next_pointer);
+
+        timeout += 1;
+
+        this.updateBinaryChartDelayed(chart, data, next_pointer, timeout);
+    }
+};
+
+const set_null_prev_pointers = (data) => {
+
+    for(let i = 0; i < data.datasets[1].data.length; i++) {
+        data.datasets[1].data[i]["y"] = null;
+        //data.datasets[1].data[i]["x"] = null;
+    }
+}
+
+function updateChartDelayed(chart, data, next_pointer, timeout, i) {
+    
     setTimeout(() => {
         data.datasets[1].data[i] = next_pointer;
-        data.datasets[1].data[i - 1]["y"] = null;
+        data.datasets[1].data[i - 1]["y"] = null;       
+        
+        chart.update();
+    }, timeout)
+};
+
+function updateBinaryChartDelayed(chart, data, next_pointer, timeout){
+
+    setTimeout(() => {
+        set_null_prev_pointers(data);
+
+        data.datasets[1].data[next_pointer["start_point"]["x"]] = next_pointer["start_point"];
+        data.datasets[1].data[next_pointer["mid_point"]["x"]] = next_pointer["mid_point"];
+        data.datasets[1].data[next_pointer["end_point"]["x"]] = next_pointer["end_point"];
+
+        data.datasets[1].backgroundColor = ['#FF6633', '#FFB399', '#FF33FF'],
+    
+        data.datasets[1].label = ["start", "mid", "end"]        
+        // data.datasets[1].data[i - 1]["y"] = null;
+
+        console.log("show me chart data : ", data);
         chart.update();
     }, timeout);
 }
@@ -146,29 +222,61 @@ function updateChartDelayed(chart, data, next_pointer, timeout, i){
 $(function() {
     let { chart, data } = shuffle();
     data.datasets[0].backgroundColor[0] = "#C74C4C";
+
+
+    const plugin = {
+        beforeInit(chart) {
+          // Get reference to the original fit function
+          const originalFit = chart.legend.fit;
+      
+          // Override the fit function
+          chart.legend.fit = function fit() {
+            console.log("this.hegith :", this.height);
+            // Call original function and bind scope in order to use `this` correctly inside it
+            originalFit.bind(chart.legend)();
+            // Change the height as suggested in another answers
+            this.height += 50;
+          }
+        }
+    }
+
+    plugin.beforeInit(chart);
+
     chart.update();
+    
+
 
     $("#shuffle_btn").unbind("click").bind("click", function(){
 
         const { size_of_data, target_data } = getInputData();
 
+        const search_type = document.getElementById("algo_type").value;
+
         removeChart(chart);
-        let { chart:next_chart, data:next_data } = shuffle(size_of_data);
+        let { chart:next_chart, data:next_data } = shuffle(size_of_data, search_type);
 
         chart = next_chart;
         data = next_data;
 
 
         data.datasets[0].backgroundColor[0] = "#C74C4C";
+        plugin.beforeInit(chart);
         chart.update();
     });
 
     $("#search_btn").unbind("click").bind("click", function() {
+        plugin.beforeInit(chart);
         const { size_of_data, target_data } = getInputData();
         const req_data = data.datasets[0].data;
         const search_type = document.getElementById("algo_type").value;
+        let response;
 
-        const response = searchApi(target_data, req_data, search_type);
+        if (search_type === "binary"){
+            response = binarySearchhApi(target_data, req_data, search_type);
+        }else if (search_type === "linear"){
+            response = linearSearchApi(target_data, req_data, search_type);
+        }
+
         
         if (response === false) {
             $("#sort_type_error_modal").modal("show");
@@ -176,9 +284,13 @@ $(function() {
 
         console.log("RES : ", response);
 
-        setTimeout(() => display_searched_data_to_chart(chart, data, response), 1000);
+        if (search_type === "binary"){
+            setTimeout(() => display_binary_search_to_chart(chart, data, response), 1000);    
+        }else{
+            setTimeout(() => display_searched_data_to_chart(chart, data, response), 1000);
+        }
+
         
     });
 
-    console.log("준비 끝");
 });

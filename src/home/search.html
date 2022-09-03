@@ -64,10 +64,10 @@
           aria-label="Default select example"
         >
           <option selected>Searching Algorithm</option>
-          <option value="linear">Linear Sort</option>
-          <option value="binary">Binary Sort</option>
-          <option value="insertion">Insertion Sort</option>
-          <option value="quick">Quick Sort</option>
+          <option value="linear">Linear Search</option>
+          <option value="binary">Binary Search</option>
+          <option value="insertion">Insertion Search</option>
+          <option value="quick">Quick Search</option>
         </select>
 
         <div class="input-group-prepend">
@@ -117,35 +117,34 @@
 
     <!-- 모달 -->
     <div class="modal" id="sort_type_error_modal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-body">
-              <p>정렬 타입을 지정해 주세요.</p>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p>정렬 타입을 지정해 주세요.</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
-  
-      <!-- 모달 -->
-      <div class="modal" id="ajax_loading_modal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="d-flex justify-content-center">
-              <div class="spinner-border" role="status"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
 
+    <!-- 모달 -->
+    <div class="modal" id="ajax_loading_modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="../../scripts/api/search.js"></script>
     <script src="../../scripts/main/search.js"></script>
