@@ -259,7 +259,7 @@ $(function() {
     });
 
     $("#search_btn").unbind("click").bind("click", function() {
-        plugin.beforeInit(chart);
+        //plugin.beforeInit(chart);
 
         const { size_of_data, target_data } = getInputData();
         const req_data = data.datasets[0].data;
