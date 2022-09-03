@@ -144,8 +144,6 @@ const display_binary_search_to_chart = (chart, data, binary_pointer_list) => {
 
     let timeout = 0;
 
-    console.log("binary_pointer_list : ", binary_pointer_list);
-
     const mid_points = binary_pointer_list["mid_point"]
     const start_points = binary_pointer_list["start_point"]
     const end_points = binary_pointer_list["end_point"]
@@ -172,8 +170,6 @@ const display_binary_search_to_chart = (chart, data, binary_pointer_list) => {
             start_point,
             end_point,
         }
-
-        console.log("next_pointer :", next_pointer);
 
         timeout += 1;
 
@@ -209,11 +205,9 @@ function updateBinaryChartDelayed(chart, data, next_pointer, timeout){
         data.datasets[1].data[next_pointer["end_point"]["x"]] = next_pointer["end_point"];
 
         data.datasets[1].backgroundColor = ['#FF6633', '#FFB399', '#FF33FF'],
-    
+        
         data.datasets[1].label = ["start", "mid", "end"]        
-        // data.datasets[1].data[i - 1]["y"] = null;
 
-        console.log("show me chart data : ", data);
         chart.update();
     }, timeout);
 }
@@ -266,6 +260,7 @@ $(function() {
 
     $("#search_btn").unbind("click").bind("click", function() {
         plugin.beforeInit(chart);
+
         const { size_of_data, target_data } = getInputData();
         const req_data = data.datasets[0].data;
         const search_type = document.getElementById("algo_type").value;
@@ -276,13 +271,10 @@ $(function() {
         }else if (search_type === "linear"){
             response = linearSearchApi(target_data, req_data, search_type);
         }
-
         
         if (response === false) {
             $("#sort_type_error_modal").modal("show");
         }
-
-        console.log("RES : ", response);
 
         if (search_type === "binary"){
             setTimeout(() => display_binary_search_to_chart(chart, data, response), 1000);    
