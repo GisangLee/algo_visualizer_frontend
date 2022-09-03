@@ -14,7 +14,7 @@ const sortApi = (data, sort_type) => {
     //console.log(data);
 
     $.ajax({
-        url: `http://172.30.1.32:9001/api-v1/sorts/?sort_type=${sort_type}&data=${data}`,
+        url: `http://127.0.0.1:8000/api-v1/sorts/?sort_type=${sort_type}&data=${data}`,
         // beforeSend: function(xhr){
         //     xhr.setRequestHeader("system-key", "key django-insecure-fh2#g)caszb0up1gee@7@u7fcxct=r79sgf#yv^fn-5p7ux5*7")
         // },
