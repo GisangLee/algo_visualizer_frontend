@@ -21,6 +21,8 @@ const generateRandomNumbers = (labels, emptyList, colors, search_type=null) => {
 
     let arr = [];
 
+    let hash_table = [];
+
     while (arr.length < totalIndex){
       let randomNum = Math.floor(Math.random() * totalIndex + 1)
       if (arr.indexOf(randomNum) === -1) {
@@ -32,6 +34,32 @@ const generateRandomNumbers = (labels, emptyList, colors, search_type=null) => {
         arr = arr.sort(function(a, b) { // 오름차순
             return a - b;
         });;
+
+    }else if (search_type === "hash"){
+
+        for(let i = 0; i < Math.round((arr.length * 1.5) + 0.5); i++){
+            hash_table.push(0);
+        };
+        
+        for(let i = 0; i < arr.length; i++){
+            let key = arr[i] % 11;
+
+            if (hash_table[key] === undefined || hash_table[key] === null){
+                hash_table[key] = arr[i];
+            }else{
+                while(hash_table[key]){
+                    if (key < hash_table.length - 1){
+                        key += 1;
+                    }else{
+                        key -= 1;
+                    }
+                };
+
+                hash_table[key] = arr[i];
+            } 
+        }
+
+        arr = hash_table;
     }
 
     let scatter_data = [];
@@ -171,10 +199,22 @@ const display_binary_search_to_chart = (chart, data, binary_pointer_list) => {
             end_point,
         }
 
-        timeout += 1;
+        timeout += 100;
 
         this.updateBinaryChartDelayed(chart, data, next_pointer, timeout);
     }
+};
+
+const display_hash_search_to_chart = (chart, data, hash_searched_index) => {
+
+    const next_pointer = {
+        "x": hash_searched_index,
+        "y": data.datasets[0].data[hash_searched_index]
+    };
+
+    const timeout = 100;
+
+    this.updateHashSearchChartDelayed(chart, data, next_pointer, timeout, hash_searched_index);
 };
 
 const set_null_prev_pointers = (data) => {
@@ -185,11 +225,24 @@ const set_null_prev_pointers = (data) => {
     }
 }
 
+
+function updateHashSearchChartDelayed(chart, data, next_pointer, timeout, hash_searched_index) {
+    
+    setTimeout(() => {
+        set_null_prev_pointers(data);
+
+        data.datasets[1].data[hash_searched_index] = next_pointer;
+        
+        chart.update();
+    }, timeout)
+};
+
+
 function updateChartDelayed(chart, data, next_pointer, timeout, i) {
     
     setTimeout(() => {
         data.datasets[1].data[i] = next_pointer;
-        data.datasets[1].data[i - 1]["y"] = null;       
+        data.datasets[1].data[i - 1]["y"] = null;    
         
         chart.update();
     }, timeout)
@@ -252,7 +305,6 @@ $(function() {
         chart = next_chart;
         data = next_data;
 
-
         data.datasets[0].backgroundColor[0] = "#C74C4C";
         plugin.beforeInit(chart);
         chart.update();
@@ -270,6 +322,8 @@ $(function() {
             response = binarySearchhApi(target_data, req_data, search_type);
         }else if (search_type === "linear"){
             response = linearSearchApi(target_data, req_data, search_type);
+        }else if (search_type === "hash"){
+            response = hashSearchApi(target_data, req_data, search_type);
         }
         
         if (response === false) {
@@ -278,8 +332,10 @@ $(function() {
 
         if (search_type === "binary"){
             setTimeout(() => display_binary_search_to_chart(chart, data, response), 1000);    
-        }else{
+        }else if (search_type == "linear"){
             setTimeout(() => display_searched_data_to_chart(chart, data, response), 1000);
+        }else if (search_type === "hash"){
+            setTimeout(() => display_hash_search_to_chart(chart, data, response), 1000);
         }
 
         
