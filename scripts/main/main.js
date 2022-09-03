@@ -157,7 +157,6 @@ $(function(){
         const req_data = data.datasets[0].data;
 
         const algo_type = document.getElementById("algo_type").value;
-
         
         const { return_data:res, color_data } = sortApi(req_data, algo_type);
 

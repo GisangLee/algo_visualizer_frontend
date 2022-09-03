@@ -1,16 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>알고비쥬 | 탐색</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-<body>
-    탐색이지롱
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>알고비쥬 | 탐색</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div
+      class="container w-75 vh-100 d-flex flex-column justify-content-evenly align-items-center"
+    >
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark w-100">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a
+                  class="nav-link active text-white"
+                  aria-current="page"
+                  href="./main.html"
+                  >Sorting</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="./search.html"
+                  >Searching</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#">Tree</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#">Graph</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#">Dynamic Promgramming</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="d-flex justify-content-center">
+        <h4 class="">watch a algorithm</h4>
+      </div>
+
+      <div class="input-group mb-2 w-75">
+        <select
+          id="algo_type"
+          class="form-select mx-2"
+          aria-label="Default select example"
+        >
+          <option selected>Searching Algorithm</option>
+          <option value="linear">Linear Sort</option>
+          <option value="binary">Binary Sort</option>
+          <option value="insertion">Insertion Sort</option>
+          <option value="quick">Quick Sort</option>
+        </select>
+
+        <div class="input-group-prepend">
+          <span class="input-group-text py-2" id="inputGroup-sizing-default"
+            >Size of Data</span
+          >
+        </div>
+        <input
+          id="size_of_data"
+          type="text"
+          class="form-control"
+          aria-label="Default"
+          aria-describedby="inputGroup-sizing-default"
+          placeholder="put a int"
+        />
+
+        <div class="mx-2"></div>
+
+        <div class="input-group-prepend">
+          <span class="input-group-text py-2" id="inputGroup-sizing-default"
+            >Target data</span
+          >
+        </div>
+        <input
+          id="target_data"
+          type="text"
+          class="form-control"
+          aria-label="Default"
+          aria-describedby="inputGroup-sizing-default"
+          placeholder="put a int"
+        />
+
+        <button id="search_btn" type="button" class="btn btn-warning mx-2">
+          Search
+        </button>
+
+        <button id="shuffle_btn" type="button" class="btn btn-danger mx-2">
+          shuffle
+        </button>
+      </div>
+      <div class="w-100">
+        <div>
+          <canvas id="dataChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <div class="modal" id="sort_type_error_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>정렬 타입을 지정해 주세요.</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- 모달 -->
+      <div class="modal" id="ajax_loading_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border" role="status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script src="../../scripts/api/search.js"></script>
+    <script src="../../scripts/main/search.js"></script>
+  </body>
 </html>

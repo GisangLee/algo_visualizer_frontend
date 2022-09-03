@@ -1,20 +1,18 @@
 let loading = false;
 
-const sortApi = (data, sort_type) => {
-    console.log(`data: ${data}, sort : ${sort_type}`);
+const searchApi = (target_data, data, search_type) => {
+    console.log(`data: ${data}, sort : ${search_type}`);
 
-    if (sort_type === "Sorting Algorithm") {
+    if (search_type === "Searching Algorithm") {
         return false;
     }
 
     let return_data = [];
 
-    let color_data = [];
-
     //console.log(data);
 
     $.ajax({
-        url: `http://127.0.0.1:8000/api-v1/sorts/?sort_type=${sort_type}&data=${data}`,
+        url: `http://127.0.0.1:8000/api-v1/searchings/?search_type=${search_type}&data=${data}&target=${target_data}`,
         // beforeSend: function(xhr){
         //     xhr.setRequestHeader("system-key", "key django-insecure-fh2#g)caszb0up1gee@7@u7fcxct=r79sgf#yv^fn-5p7ux5*7")
         // },
@@ -25,21 +23,15 @@ const sortApi = (data, sort_type) => {
     }).done(function(data) {
         $("#ajax_loading_modal").modal("hide");
 
-        console.log("response : ", data);
-
-        data["message"]["data"].forEach(element => {
+        data["message"].forEach(element => {
             return_data.push(element);
         });
-
-        data["message"]["color"].forEach(element => {
-            color_data.push(element);
-        })
 
     }).fail(function(error) {
         alert(error.errors);
     });
 
-    return { return_data, color_data };
+    return return_data;
 
 }
 
